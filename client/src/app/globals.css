@@ -1,0 +1,107 @@
+/* client/src/app/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* --- LIGHT MODE COLORS --- */
+  :root {
+    --background: 0 0% 98%;             /* Main page background (pure white) */
+    --foreground: 0 0% 9%;             /* Main text color (near-black) */
+
+    --card: 0 0% 100%;                   /* Background of cards, dialogs, etc. */
+    --card-foreground: 0 0% 3.9%;        /* Text color inside cards */
+
+    --popover: 0 0% 100%;                /* Background of popovers (e.g., dropdowns) */
+    --popover-foreground: 0 0% 3.9%;     /* Text inside popovers */
+
+    --primary: 0 0% 9%;                  /* Background of primary buttons (e.g., "Sign In") */
+    --primary-foreground: 0 0% 98%;      /* Text on primary buttons (near-white) */
+
+    --secondary: 0 0% 96.1%;             /* Background of secondary buttons */
+    --secondary-foreground: 0 0% 9%;     /* Text on secondary buttons */
+
+    --muted: 0 0% 96.1%;                 /* Background for subtle, less important elements */
+    --muted-foreground: 0 0% 45.1%;      /* Text for less important info (e.g., descriptions) */
+
+    --accent: 0 0% 96.1%;                /* Background for hovered items, like dropdown options */
+    --accent-foreground: 0 0% 9%;        /* Text for hovered items */
+
+    --destructive: 0 84.2% 60.2%;        /* Color for error states, delete buttons (Red) */
+    --destructive-foreground: 0 0% 98%;  /* Text on destructive elements (near-white) */
+
+    --border: 0 0% 89.8%;                /* Color for borders on cards, inputs */
+    --input: 0 0% 89.8%;                 /* Border color for form inputs */
+    --ring: 0 0% 3.9%;                   /* Color of the focus ring around interactive elements */
+
+    --radius: 0.5rem;                    /* Controls the roundness of corners */
+  }
+
+  /* --- DARK MODE COLORS --- */
+  .dark {
+    --background: 0 0% 3.9%;             /* Main page background (near-black) */
+    --foreground: 0 0% 96%;             /* Main text color (near-white) */
+
+    --card: 0 0% 3.9%;                   /* Background of cards */
+    --card-foreground: 0 0% 98%;         /* Text inside cards */
+
+    --popover: 0 0% 3.9%;                /* Background of popovers */
+    --popover-foreground: 0 0% 98%;      /* Text inside popovers */
+
+    --primary: 0 0% 98%;                 /* Background of primary buttons (near-white) */
+    --primary-foreground: 0 0% 9%;       /* Text on primary buttons (near-black) */
+
+    --secondary: 0 0% 14.9%;             /* Background of secondary buttons */
+    --secondary-foreground: 0 0% 98%;    /* Text on secondary buttons */
+
+    --muted: 0 0% 14.9%;                 /* Background for subtle elements */
+    --muted-foreground: 0 0% 63.9%;      /* Text for less important info */
+
+    --accent: 0 0% 14.9%;                /* Background for hovered items */
+    --accent-foreground: 0 0% 98%;       /* Text for hovered items */
+
+    --destructive: 0 62.8% 30.6%;        /* Color for error states (darker red) */
+    --destructive-foreground: 0 0% 98%;  /* Text on destructive elements */
+
+    --border: 0 0% 14.9%;                /* Color for borders */
+    --input: 0 0% 14.9%;                 /* Border color for inputs */
+    --ring: 0 0% 83.1%;                  /* Color of the focus ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* --- NEW ANIMATED BORDER UTILITY --- */
+@layer components {
+  .card-animated-border {
+    @apply relative overflow-hidden transition-shadow;
+  }
+  .card-animated-border::before,
+  .card-animated-border::after {
+    content: '';
+    @apply absolute bg-primary dark:bg-primary-foreground;
+    transition: transform 0.3s ease-in-out;
+  }
+  /* Bottom border */
+  .card-animated-border::before {
+    @apply bottom-0 left-0 w-full h-[2px] transform scale-x-0 origin-right;
+  }
+  /* Left border */
+  .card-animated-border::after {
+    @apply bottom-0 left-0 w-[2px] h-full transform scale-y-0 origin-top;
+  }
+  .card-animated-border:hover::before {
+    @apply transform scale-x-100 origin-left;
+  }
+  .card-animated-border:hover::after {
+    @apply transform scale-y-100 origin-bottom;
+  }
+}
