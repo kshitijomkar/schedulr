@@ -1,17 +1,14 @@
-// server/routes/faculty.js
+// server/routes/schedule.js
 
 const express = require('express');
 const router = express.Router();
-const { getFaculty, createFaculty, updateFaculty, deleteFaculty, exportFaculty, importFaculty } = require('../controllers/faculty');
+
+const { generateSchedule, getSchedule } = require('../controllers/schedule');
 const { protect } = require('../middleware/auth');
-const upload = require('../middleware/uploadValidator');
 
 router.use(protect);
 
-router.route('/export').get(exportFaculty);
-router.route('/import').post(upload.single('file'), importFaculty);
-
-router.route('/').get(getFaculty).post(createFaculty);
-router.route('/:id').put(updateFaculty).delete(deleteFaculty);
+router.route('/').get(getSchedule); // The new GET route
+router.route('/generate').post(generateSchedule);
 
 module.exports = router;
