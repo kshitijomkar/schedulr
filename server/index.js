@@ -19,6 +19,7 @@ const subjectRoutes = require('./routes/subjects');
 const sectionRoutes = require('./routes/sections');
 const scheduleRoutes = require('./routes/schedule');
 const dashboardRoutes = require('./routes/dashboard');
+const healthRoutes = require('./routes/health');
 
 connectDB();
 const app = express();
@@ -50,6 +51,8 @@ app.use(express.json({ limit: '10mb' }));
 
 const PORT = process.env.PORT || 8000;
 
+app.use('/api/health', healthRoutes);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Apply general rate limiter to all API routes
@@ -63,6 +66,7 @@ app.use('/api/subjects', subjectRoutes);
 app.use('/api/sections', sectionRoutes);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+
 
 // --- ADDED: Use the error handler middleware ---
 // This MUST be after all the app.use() routes
