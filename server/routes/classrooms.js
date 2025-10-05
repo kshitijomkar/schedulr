@@ -2,7 +2,6 @@
 
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 
 const {
   getClassrooms,
@@ -10,14 +9,11 @@ const {
   updateClassroom,
   deleteClassroom,
   exportClassrooms,
-  importClassrooms, // Import the new function
+  importClassrooms,
 } = require('../controllers/classrooms');
 
 const { protect } = require('../middleware/auth');
-
-// Configure multer for in-memory file storage
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = require('../middleware/uploadValidator');
 
 router.use(protect);
 

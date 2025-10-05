@@ -2,14 +2,18 @@
 const Subject = require('../models/Subject');
 const ExcelJS = require('exceljs');
 const asyncHandler = require('../middleware/asyncHandler');
+const { escapeRegex } = require('../utils/sanitize');
 
 exports.getSubjects = asyncHandler(async (req, res, next) => {
   const { page = 1, limit = 10, sortKey, sortDirection, search, department, courseType } = req.query;
   const query = {};
 
   if (search) {
-    // UPDATED: Using the text index for faster searches on name and code
-    query.$text = { $search: search };
+    const sanitizedSearch = escapeRegex(search);
+    query.$or = [
+      { name: { $regex: sanitizedSearch, $options: 'i' } },
+      { code: { $regex: sanitizedSearch, $options: 'i' } },
+    ];
   }
   if (department) query.department = { $in: department.split(',') };
   if (courseType) query.courseType = { $in: courseType.split(',') };

@@ -2,14 +2,18 @@
 const Classroom = require('../models/Classroom');
 const ExcelJS = require('exceljs');
 const asyncHandler = require('../middleware/asyncHandler');
+const { escapeRegex } = require('../utils/sanitize');
 
 exports.getClassrooms = asyncHandler(async (req, res, next) => {
   const { page = 1, limit = 10, sortKey, sortDirection, search, roomType, department } = req.query;
   const query = {};
 
   if (search) {
-    // UPDATED: Using the text index for faster searches on name and location
-    query.$text = { $search: search };
+    const sanitizedSearch = escapeRegex(search);
+    query.$or = [
+      { name: { $regex: sanitizedSearch, $options: 'i' } },
+      { location: { $regex: sanitizedSearch, $options: 'i' } },
+    ];
   }
   if (roomType) query.roomType = { $in: roomType.split(',') };
   if (department) query.department = { $in: department.split(',') };

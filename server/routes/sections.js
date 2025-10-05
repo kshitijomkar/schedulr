@@ -1,12 +1,9 @@
 // server/routes/sections.js
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const { getSections, createSection, updateSection, deleteSection, exportSections, importSections } = require('../controllers/sections');
 const { protect } = require('../middleware/auth');
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = require('../middleware/uploadValidator');
 
 router.use(protect);
 

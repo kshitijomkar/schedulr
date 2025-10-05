@@ -4,7 +4,6 @@ const express = require('express');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const cors = require('cors');
-const allowedOrigins = ['https://schedulr-pied.vercel.app']; // Your Vercel URL
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
@@ -24,23 +23,22 @@ const dashboardRoutes = require('./routes/dashboard');
 connectDB();
 const app = express();
 
-const whitelist = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : [];
+const defaultOrigins = process.env.NODE_ENV === 'production' ? [] : ['http://localhost:5000', 'http://localhost:3000'];
+const whitelist = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : defaultOrigins;
+
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
+    if (!origin || whitelist.length === 0 || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  credentials: true,
   optionsSuccessStatus: 200
 };
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(cors(corsOptions));
-} else {
-    app.use(cors());
-}
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
