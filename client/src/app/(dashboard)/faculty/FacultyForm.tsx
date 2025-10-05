@@ -21,11 +21,16 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   employeeId: z.string().min(1, { message: "Employee ID is required." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
-  department: z.string({ required_error: "Please select a department." }).min(1, { message: "Please select a department." }),
-  subjectsTaught: z.array(z.string()).default([]), // Now expects an array of strings (IDs)
+  department: z.string().min(1, { message: "Please select a department." }),
+  subjectsTaught: z.array(z.string()).default([]),
 });
 
 type FacultyFormValues = z.infer<typeof formSchema>;
+
+interface Subject {
+  _id: string;
+  name: string;
+}
 
 interface Faculty {
   _id: string;
@@ -33,7 +38,7 @@ interface Faculty {
   employeeId: string;
   email: string;
   department: string;
-  subjectsTaught: string[];
+  subjectsTaught: Subject[];
 }
 
 interface FacultyFormProps {
@@ -46,7 +51,7 @@ export function FacultyForm({ facultyToEdit, onSuccess, setOpen }: FacultyFormPr
   const { toast } = useToast();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const form = useForm<FacultyFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", employeeId: "", email: "", department: "", subjectsTaught: [] },
   });
@@ -60,7 +65,7 @@ export function FacultyForm({ facultyToEdit, onSuccess, setOpen }: FacultyFormPr
         employeeId: facultyToEdit.employeeId,
         email: facultyToEdit.email,
         department: facultyToEdit.department,
-        subjectsTaught: facultyToEdit.subjectsTaught || [],
+        subjectsTaught: facultyToEdit.subjectsTaught.map(subject => subject._id),
       });
     } else {
       form.reset({ name: "", employeeId: "", email: "", department: "", subjectsTaught: [] });

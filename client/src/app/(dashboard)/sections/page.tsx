@@ -16,7 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 
-interface Subject { _id: string; name: string; }
+interface Subject { _id: string; name: string; code: string; }
 interface Section { _id: string; year: number; semester: number; department: string; sectionName: string; studentCount: number; numLabBatches: number; subjects: Subject[]; }
 
 type SortKey = keyof Section | null;

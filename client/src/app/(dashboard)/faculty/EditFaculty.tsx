@@ -4,13 +4,18 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FacultyForm } from "./FacultyForm";
 
+interface Subject {
+  _id: string;
+  name: string;
+}
+
 interface Faculty {
   _id: string;
   name: string;
   employeeId: string;
   email: string;
   department: string;
-  subjectsTaught: string[];
+  subjectsTaught: Subject[];
 }
 
 interface EditFacultyProps {

@@ -20,7 +20,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Classroom name must be at least 2 characters." }),
   capacity: z.string().min(1, { message: "Capacity is required." }),
   location: z.string().min(2, { message: "Location is required." }),
-  roomType: z.string({ required_error: "Please select a room type." }).min(1, { message: "Please select a room type." }),
+  roomType: z.string().min(1, { message: "Please select a room type." }),
   department: z.string().optional(),
   equipment: z.array(z.string()).default([]),
 });
@@ -34,7 +34,7 @@ export function ClassroomForm({ classroomToEdit, onSuccess, setOpen }: Classroom
   const { toast } = useToast();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const form = useForm<ClassroomFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", capacity: "10", location: "", roomType: "", department: "", equipment: [] },
   });

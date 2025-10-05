@@ -37,14 +37,14 @@ export function SubjectMultiSelect({ field }: SubjectMultiSelectProps) {
   const handleUnselect = (subjectId: string) => {
     const newSelectedIds = new Set(selectedIds);
     newSelectedIds.delete(subjectId);
-    field.onChange(Array.from(newSelectedIds));
+    field.onChange(Array.from(newSelectedIds) as any);
   };
   
   const handleSelect = (subjectId: string) => {
     setInputValue("");
     const newSelectedIds = new Set(selectedIds);
     newSelectedIds.add(subjectId);
-    field.onChange(Array.from(newSelectedIds));
+    field.onChange(Array.from(newSelectedIds) as any);
   };
   
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -52,7 +52,7 @@ export function SubjectMultiSelect({ field }: SubjectMultiSelectProps) {
     if (input && (e.key === "Delete" || e.key === "Backspace") && input.value === "") {
       const allSelected = Array.from(selectedIds);
       if (allSelected.length > 0) {
-        handleUnselect(allSelected[allSelected.length - 1]);
+        handleUnselect(allSelected[allSelected.length - 1] as string);
       }
     }
   };

@@ -20,7 +20,7 @@ const departmentOptions = [ "Computer Science", "Information Technology", "Elect
 const formSchema = z.object({
   year: z.coerce.number().min(1, "Year is required."),
   semester: z.coerce.number().min(1, "Semester is required."),
-  department: z.string({ required_error: "Please select a department." }),
+  department: z.string().min(1, { message: "Please select a department." }),
   sectionName: z.string().min(1, { message: "Section name is required." }),
   studentCount: z.coerce.number().min(1, { message: "Student count is required." }),
   numLabBatches: z.coerce.number().min(1, { message: "Number of lab batches is required." }),
@@ -57,7 +57,7 @@ export function SectionForm({ sectionToEdit, onSuccess, setOpen }: SectionFormPr
   const { toast } = useToast();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const form = useForm<SectionFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { year: 3, semester: 1, department: "Computer Science", sectionName: "A", studentCount: 60, numLabBatches: 2, subjects: [] },
   });
@@ -102,14 +102,14 @@ export function SectionForm({ sectionToEdit, onSuccess, setOpen }: SectionFormPr
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <FormField control={form.control} name="year" render={({ field }) => ( <FormItem> <FormLabel>Year</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
-          <FormField control={form.control} name="semester" render={({ field }) => ( <FormItem> <FormLabel>Semester</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="year" render={({ field }) => ( <FormItem> <FormLabel>Year</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="semester" render={({ field }) => ( <FormItem> <FormLabel>Semester</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
           <FormField control={form.control} name="sectionName" render={({ field }) => ( <FormItem> <FormLabel>Section</FormLabel> <FormControl><Input placeholder="e.g., A" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
         </div>
         <FormField control={form.control} name="department" render={({ field }) => ( <FormItem> <FormLabel>Department</FormLabel> <Select onValueChange={field.onChange} value={field.value}> <SelectTrigger><SelectValue placeholder="Select a department" /></SelectTrigger> <SelectContent> {departmentOptions.map(dept => ( <SelectItem key={dept} value={dept}>{dept}</SelectItem> ))} </SelectContent> </Select> <FormMessage /> </FormItem> )} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField control={form.control} name="studentCount" render={({ field }) => ( <FormItem> <FormLabel>Student Count</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
-          <FormField control={form.control} name="numLabBatches" render={({ field }) => ( <FormItem> <FormLabel>Lab Batches</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="studentCount" render={({ field }) => ( <FormItem> <FormLabel>Student Count</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="numLabBatches" render={({ field }) => ( <FormItem> <FormLabel>Lab Batches</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
         </div>
         <FormField control={form.control} name="subjects" render={({ field }) => ( <FormItem> <FormLabel>Subjects</FormLabel> <FormControl><SubjectMultiSelect field={field} /></FormControl> <FormMessage /> </FormItem> )} />
         <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>

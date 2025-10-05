@@ -21,11 +21,11 @@ const formSchema = z.object({
   name: z.string().min(3, { message: "Subject name must be at least 3 characters." }),
   code: z.string().min(3, { message: "Subject code is required." }),
   semester: z.coerce.number().min(1).max(8),
-  department: z.string({ required_error: "Please select a department." }).min(1, { message: "Please select a department." }),
+  department: z.string().min(1, { message: "Please select a department." }),
   lectureHours: z.coerce.number().min(0).default(0),
   labHours: z.coerce.number().min(0).default(0),
   tutorialHours: z.coerce.number().min(0).default(0),
-  courseType: z.string({ required_error: "Please select a course type." }).min(1, { message: "Please select a course type." }),
+  courseType: z.string().min(1, { message: "Please select a course type." }),
 });
 
 type SubjectFormValues = z.infer<typeof formSchema>;
@@ -52,7 +52,7 @@ export function SubjectForm({ subjectToEdit, onSuccess, setOpen }: SubjectFormPr
   const { toast } = useToast();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const form = useForm<SubjectFormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", code: "", semester: 1, department: "", lectureHours: 3, labHours: 0, tutorialHours: 1, courseType: "Core" },
   });
@@ -103,12 +103,12 @@ export function SubjectForm({ subjectToEdit, onSuccess, setOpen }: SubjectFormPr
               <FormMessage />
             </FormItem>
           )} />
-          <FormField control={form.control} name="semester" render={({ field }) => ( <FormItem> <FormLabel>Semester</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="semester" render={({ field }) => ( <FormItem> <FormLabel>Semester</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <FormField control={form.control} name="lectureHours" render={({ field }) => ( <FormItem> <FormLabel>Lecture Hrs/Wk</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
-          <FormField control={form.control} name="labHours" render={({ field }) => ( <FormItem> <FormLabel>Lab Hrs/Wk</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
-          <FormField control={form.control} name="tutorialHours" render={({ field }) => ( <FormItem> <FormLabel>Tutorial Hrs/Wk</FormLabel> <FormControl><Input type="number" {...field} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="lectureHours" render={({ field }) => ( <FormItem> <FormLabel>Lecture Hrs/Wk</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="labHours" render={({ field }) => ( <FormItem> <FormLabel>Lab Hrs/Wk</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
+          <FormField control={form.control} name="tutorialHours" render={({ field }) => ( <FormItem> <FormLabel>Tutorial Hrs/Wk</FormLabel> <FormControl><Input type="number" value={String(field.value || "")} onChange={(e) => field.onChange(e.target.valueAsNumber)} onBlur={field.onBlur} name={field.name} ref={field.ref} /></FormControl> <FormMessage /> </FormItem> )} />
         </div>
         <FormField control={form.control} name="courseType" render={({ field }) => (
             <FormItem>

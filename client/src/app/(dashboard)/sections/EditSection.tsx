@@ -4,6 +4,12 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SectionForm } from "./SectionForm";
 
+interface Subject {
+  _id: string;
+  name: string;
+  code: string;
+}
+
 interface Section {
   _id: string;
   year: number;
@@ -12,7 +18,7 @@ interface Section {
   sectionName: string;
   studentCount: number;
   numLabBatches: number;
-  subjects: string[];
+  subjects: Subject[];
 }
 
 interface EditSectionProps {

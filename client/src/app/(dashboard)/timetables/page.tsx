@@ -23,6 +23,7 @@ interface ScheduledClass {
     subject: { name: string; };
     faculty: { name: string; }[];
     classroom: { name: string; };
+    section: string;
     labBatchNumber?: number;
 }
 
