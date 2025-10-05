@@ -35,6 +35,7 @@ const whitelist = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : d
 
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log('Request Origin:', origin);
     if (!origin || whitelist.length === 0 || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
