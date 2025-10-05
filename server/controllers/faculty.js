@@ -1,21 +1,19 @@
-// server/controllers/faculty.js
 const Faculty = require('../models/Faculty');
-const Subject = require('../models/Subject'); // ADDED: For import logic
+const Subject = require('../models/Subject');
 const ExcelJS = require('exceljs');
-const asyncHandler = require('../middleware/asyncHandler'); // ADDED: Async handler
-
-// --- UPDATED: All functions are wrapped in asyncHandler and try/catch is removed ---
+const asyncHandler = require('../middleware/asyncHandler');
+const { escapeRegex } = require('../utils/sanitize');
 
 exports.getFaculty = asyncHandler(async (req, res, next) => {
   const { page = 1, limit = 10, sortKey, sortDirection, search, department } = req.query;
   const query = {};
 
   if (search) {
-    // UPDATED: Using text index for name, regex for other fields
+    const sanitizedSearch = escapeRegex(search);
     query.$or = [
-      { $text: { $search: search } },
-      { employeeId: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
+      { name: { $regex: sanitizedSearch, $options: 'i' } },
+      { employeeId: { $regex: sanitizedSearch, $options: 'i' } },
+      { email: { $regex: sanitizedSearch, $options: 'i' } },
     ];
   }
   if (department) query.department = { $in: department.split(',') };

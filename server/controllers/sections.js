@@ -1,16 +1,18 @@
 // server/controllers/sections.js
 const Section = require('../models/Section');
-const Subject = require('../models/Subject'); // ADDED: For import logic
+const Subject = require('../models/Subject');
 const ExcelJS = require('exceljs');
-const asyncHandler = require('../middleware/asyncHandler'); // ADDED: Async handler
+const asyncHandler = require('../middleware/asyncHandler');
+const { escapeRegex } = require('../utils/sanitize');
 
 exports.getSections = asyncHandler(async (req, res, next) => {
   const { page = 1, limit = 10, sortKey, sortDirection, search, department } = req.query;
   const query = {};
   if (search) {
+    const sanitizedSearch = escapeRegex(search)
     query.$or = [
-      { sectionName: { $regex: search, $options: 'i' } },
-      { department: { $regex: search, $options: 'i' } } // Also search by department
+      { sectionName: { $regex: sanitizedSearch, $options: 'i' } },
+      { department: { $regex: sanitizedSearch, $options: 'i' } }
     ];
   }
   if (department) query.department = { $in: department.split(',') };

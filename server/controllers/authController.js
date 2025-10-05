@@ -3,6 +3,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require('../middleware/asyncHandler');
+const { validatePassword } = require('../utils/validation');
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = jwt.sign(
@@ -26,6 +27,11 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
+
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.valid) {
+    return res.status(400).json({ success: false, message: passwordValidation.message });
+  }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
