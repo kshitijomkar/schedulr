@@ -20,7 +20,7 @@ const sectionRoutes = require('./routes/sections');
 const scheduleRoutes = require('./routes/schedule');
 const dashboardRoutes = require('./routes/dashboard');
 const healthRoutes = require('./routes/health');
-
+const messageRoutes = require('./routes/messages.js');
 connectDB();
 const app = express();
 
@@ -41,8 +41,9 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow POST
+  allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allow these headers
   credentials: true,
-  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
@@ -66,7 +67,7 @@ app.use('/api/subjects', subjectRoutes);
 app.use('/api/sections', sectionRoutes);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-
+app.use('/api/messages', messageRoutes);
 
 // --- ADDED: Use the error handler middleware ---
 // This MUST be after all the app.use() routes
