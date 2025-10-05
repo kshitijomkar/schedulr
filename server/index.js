@@ -8,8 +8,8 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
 
-// --- ADDED: Import the new error handler ---
 const errorHandler = require('./middleware/errorHandler');
+const { generalLimiter } = require('./middleware/rateLimiter');
 
 // Import route files
 const authRoutes = require('./routes/auth');
@@ -22,6 +22,12 @@ const dashboardRoutes = require('./routes/dashboard');
 
 connectDB();
 const app = express();
+
+// Validate required environment variables in production
+if (process.env.NODE_ENV === 'production' && !process.env.CLIENT_URL) {
+  console.error('FATAL ERROR: CLIENT_URL environment variable is required in production');
+  process.exit(1);
+}
 
 const defaultOrigins = process.env.NODE_ENV === 'production' ? [] : ['http://localhost:5000', 'http://localhost:3000'];
 const whitelist = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : defaultOrigins;
@@ -40,11 +46,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 const PORT = process.env.PORT || 8000;
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Apply general rate limiter to all API routes
+app.use('/api', generalLimiter);
 
 // Mount routers
 app.use('/api/auth', authRoutes);
