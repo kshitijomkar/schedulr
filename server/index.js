@@ -4,6 +4,7 @@ const express = require('express');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const cors = require('cors');
+const allowedOrigins = ['https://schedulr-pied.vercel.app']; // Your Vercel URL
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');

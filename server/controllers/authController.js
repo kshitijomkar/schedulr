@@ -25,7 +25,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 };
 
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -41,7 +41,6 @@ exports.register = asyncHandler(async (req, res, next) => {
     name,
     email,
     password: hashedPassword,
-    role,
   });
 
   sendTokenResponse(user, 201, res);
